@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nosso Amor em 9 Capítulos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #fff0f5;
+    overflow-x: hidden;
+    color: #c2185b;
+  }
+  .container {
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  h1, h2 {
+    margin-bottom: 10px;
+  }
+  p {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  img {
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(194,24,91,0.3);
+    margin-bottom: 20px;
+  }
+  button {
+    background-color: #c2185b;
+    border: none;
+    color: white;
+    padding: 12px 25px;
+    margin: 10px 15px;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #9b1550;
+  }
+  .nav-buttons {
+    margin-top: 15px;
+  }
+  #player {
+    display: none;
+  }
+  .music-control {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    background: #c2185b;
+    border-radius: 50%;
+    width: 50px; height: 50px;
+    color: white;
+    font-size: 24px;
+    line-height: 50px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(194,24,91,0.5);
+    user-select: none;
+    z-index: 9999;
+  }
+  /* Animated hearts */
+  .heart {
+    position: fixed;
+    width: 25px;
+    height: 25px;
+    background-color: #c2185b;
+    transform: rotate(-45deg);
+    animation: floatUp linear forwards;
+    opacity: 0.8;
+    z-index: 0;
+    border-radius: 3px;
+  }
+  .heart::before,
+  .heart::after {
+    content: "";
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background-color: #c2185b;
+    border-radius: 50%;
+  }
+  .heart::before {
+    top: -12.5px;
+    left: 0;
+  }
+  .heart::after {
+    left: 12.5px;
+    top: 0;
+  }
+  @keyframes floatUp {
+    0% {
+      transform: translateY(0) rotate(-45deg);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(-120vh) rotate(-45deg);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="app">
+
+  <!-- Tela inicial -->
+  <section id="start-screen">
+    <h1>Nosso Amor em 9 Capítulos</h1>
+    <p>Hoje celebramos 3 meses de uma história linda. Clique para começar a viajar por cada capítulo da nossa jornada juntos.</p>
+    <button id="start-btn">Começar nossa história 💖</button>
+  </section>
+
+  <!-- Capítulos (oculto inicialmente) -->
+  <section id="chapters" style="display:none;">
+    <h2 id="chapter-title"></h2>
+    <img id="chapter-img" src="" alt="Foto do capítulo" />
+    <p id="chapter-text"></p>
+    <div class="nav-buttons">
+      <button id="prev-btn">← Anterior</button>
+      <button id="next-btn">Próximo →</button>
+    </div>
+  </section>
+
+  <!-- Tela final -->
+  <section id="end-screen" style="display:none;">
+    <h1>Obrigada por esses 3 meses incríveis!</h1>
+    <p>Que essa seja a primeira de muitas histórias que vamos construir juntos. Te amo muito! 💘</p>
+    <button id="restart-btn">Rever a história</button>
+  </section>
+
+</div>
+
+<!-- Player YouTube (oculto) -->
+<div id="player"></div>
+
+<!-- Controle da música -->
+<div class="music-control" id="music-control" title="Tocar / Pausar música">►</div>
+
+<script>
+  // Dados dos capítulos
+  const chapters = [
+    {
+      title: "Capítulo 1: O Começo de Tudo",
+      img: "foto1.jpg",
+      text: "E entre tantas vidas por aí, a minha encontrou a tua. Foi num dia qualquer, mas você fez ele ser eterno. Ali começava algo que nem nós sabíamos o quanto mudaria tudo. Foi leve, foi intenso, foi… a gente."
+    },
+    {
+      title: "Capítulo 2: Nosso Primeiro Abraço",
+      img: "foto2.jpg",
+      text: "Te abraçar foi como voltar pra casa. Seu cheiro, seu calor, sua presença — tudo encaixou. Aquele instante virou refúgio, e desde então, tudo ficou mais calmo com você por perto."
+    },
+    {
+      title: "Capítulo 3: Somos Dois, Mas Um Só",
+      img: "foto3.jpg",
+      text: "Entre risos e olhares, a conexão se firmou. Somos cumplicidade em forma de gente. Dois corações que batem juntos no compasso de uma mesma música: a nossa."
+    },
+    {
+      title: "Capítulo 4: Dias Simples, Momentos Incríveis",
+      img: "foto4.jpg",
+      text: "Não precisa de luxo quando se tem amor. Foi num fim de tarde comum que vivemos o extraordinário. O brilho no teu olhar fazia o sol parecer tímido."
+    },
+    {
+      title: "Capítulo 5: Nossos Rolês Inesquecíveis",
+      img: "foto5.jpg",
+      text: "Cada passeio é uma nova memória tatuada na alma. De mãos dadas, enfrentamos o mundo — ou só rimos dele. Entre uma foto e outra, a certeza: quero te levar pra todos os lugares do meu futuro."
+    },
+    {
+      title: "Capítulo 6: O Gosto do Teu Beijo",
+      img: "foto6.jpg",
+      text: "Teu beijo tem gosto de lar, de poesia, de paz. Beijar você é esquecer do tempo e do mundo. É fazer das bocas entrelaçadas uma promessa silenciosa de amor eterno."
+    },
+    {
+      title: "Capítulo 7: Noite, Amor e Nós Dois",
+      img: "foto7.jpg",
+      text: "Quando o mundo desacelera, é você que eu quero ao meu lado. Nas noites mais calmas ou nas tempestades, sua presença é farol. E sob a luz da lua, cada 'eu te amo' ecoa mais forte."
+    },
+    {
+      title: "Capítulo 8: Nossos 3 Meses",
+      img: "foto8.jpg",
+      text: "Três meses. Noventa dias, centenas de sorrisos, infinitos sentimentos. Parece pouco, mas é tudo. É o começo da história que eu quero escrever com você por todas as páginas da vida."
+    },
+    {
+      title: "Capítulo 9: Só os Loucos Sabem",
+      img: "foto9.jpg",
+      text: "Amar é para os corajosos. E a gente se jogou sem medo, como quem sabe que vale a pena. ‘Só os loucos sabem’, diz a música. E nós, loucamente, sabemos: Nosso amor é o que move tudo."
+    }
+  ];
+
+  let currentChapter = 0;
+
+  const startScreen = document.getElementById('start-screen');
+  const chaptersSection = document.getElementBy
